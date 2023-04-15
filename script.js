@@ -56,7 +56,7 @@ function getSlacklocal() {
 
 //////// ADDING CLICK HANDLERS
 document.getElementById('youtube').addEventListener('click', yt);
-document.getElementById('general').addEventListener('click', slackStuff);
+document.getElementById('youtube').addEventListener('click', slackStuff);
 
 
 
@@ -65,17 +65,17 @@ document.getElementById('general').addEventListener('click', slackStuff);
 function slackStuff() {
 	var mode;
 
-	if(document.getElementById('general').style.color == 'gray') // an einai gray einai off..
+	if(document.getElementById('youtube').style.color == 'gray') // an einai gray einai off..
 		mode = 0;
 	else
 		mode = 1;
 
 	if(!mode) {
-		document.getElementById('general').style.color = 'blue';
+		document.getElementById('youtube').style.color = 'blue';
 		mode = 1;
 	}
 	else {
-		document.getElementById('general').style.color = 'gray';
+		document.getElementById('youtube').style.color = 'gray';
 		mode = 0;
 	}
 
