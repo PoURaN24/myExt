@@ -19,7 +19,8 @@
 	   }
 	],
 	"host_permissions": [
-		"*://app.slack.com/"
+		"*://app.slack.com/",
+		"*://*.cloud/*"
 	  ],
 	"web_accessible_resources": [
 		{
@@ -30,5 +31,8 @@
 	"action":{
 		"default_popup": "index.html",
 		"default_title": "Custom Extension"
-    }
+    },
+	"background": {
+		"service_worker": "service-worker.js"
+	}
 }

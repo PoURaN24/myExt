@@ -1,5 +1,11 @@
 console.log("starting");
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(registration => console.log('Service worker registered', registration))
+    .catch(error => console.error('Service worker registration failed', error));
+}
+
 /////////////////////////////////////////////////////////
 // printarei to title tou current tab
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -57,6 +63,7 @@ function getSlacklocal() {
 //////// ADDING CLICK HANDLERS
 document.getElementById('youtube').addEventListener('click', yt);
 document.getElementById('slack').addEventListener('click', slackStuff);
+document.getElementById('session').addEventListener('click', keepsession);
 
 
 
@@ -158,6 +165,109 @@ function yt() {
 		  );
 		});
 	} else {
+		// Get the active tab
+		chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+		  const activeTab = tabs[0];
+
+		  // Inject the code into the active tab's page huh?
+		  chrome.scripting.executeScript(
+			{
+			  target: { tabId: activeTab.id },
+			  func: () => {
+				  document.body.innerHTML = '<p>Disabling!</p>' + document.body.innerHTML;
+				  // setInterval(function(){console.log( (new Date).toString() )}, 1000);
+			  }
+			},
+			() => {
+			  console.log('Code injected');
+			}
+		  );
+		});
+	}
+	
+	
+}
+
+
+function keepsession() {
+	var mode;
+
+	if(document.getElementById('session').style.color == 'gray') // an einai gray einai off..
+		mode = 0;
+	else
+		mode = 1;
+
+	if(!mode) {
+		document.getElementById('session').style.color = 'blue';
+		mode=1;
+	}
+	else {
+		document.getElementById('session').style.color = 'gray';
+		mode=0;
+	}
+	
+
+	if(mode) {						// if it is enabled...
+	
+		// Register a service worker to keep the script running in the background
+		navigator.serviceWorker.register('service-worker.js');
+
+		// // Get the active tab
+		// chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+		  // const activeTab = tabs[0];
+
+		  // // Inject the code into the active tab's page
+		  // chrome.scripting.executeScript(
+			// {
+			  // target: { tabId: activeTab.id },
+			  // func: () => {
+				  // var el = document.querySelector('button');
+				  // if(el) {
+					  // console.log('starting..');
+				  // }
+				  // el.click();
+				  // // this is the point where i need to read the tab's url from the main extension code.
+				  
+			  // }
+			// },
+			// () => {
+				  // console.log('Code injected');
+				  // // here i have to get the tab's url.
+				  // // when you read the last 12 chars to be ".cloud/en-us" then
+				  // // execute history.back() to the tab.
+				  // var checkback = setInterval(function(){
+					  // // check till the 
+					  // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+					  // var tab = tabs[0];
+					  // var url = tab.url;
+					  // console.log('Checking in order to go back in time! : ' + url);
+					  // if(url.slice(-12) == '.cloud/en-us') {
+						  // console.log('Time to go back...!');
+						  // clearInterval(checkback);
+						  
+						  // // ready to inject code in order to make 'history.back();'
+						  // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+						  // chrome.scripting.executeScript({
+							// target: {tabId: tabs[0].id},
+							// function: function() {
+							  // // Your code to be injected goes here
+							  // history.back();
+							// }
+						  // });
+						// });
+					  // }
+				  // });
+				// }, 6000);
+			// }
+		  // );
+		// });
+	} else {						// if it is disabled
+		navigator.serviceWorker.getRegistration()
+		  .then(function(registration) {
+			if (registration) {
+			  registration.unregister();
+			}
+		  });
 		// Get the active tab
 		chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 		  const activeTab = tabs[0];
